@@ -14,6 +14,9 @@ DB_PASS=$7
 DB_NAME=$8
 MAGENTO_URL=$9
 
+MAGERUN=${10}
+MODMAN=${11}
+
 # Run update
 # ---------------------------------------------------------------------- */
 apt-get update
@@ -136,16 +139,20 @@ fi
 
 # Install n98-magerun
 # ---------------------------------------------------------------------- */
-cd /vagrant
-if [[ ! -f "n98-magerun.phar" ]]; then
-  wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
+if [[ $MAGERUN == "true" ]]; then
+  cd /vagrant
+  if [[ ! -f "n98-magerun.phar" ]]; then
+    wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
+  fi
+  sudo cp ./n98-magerun.phar /usr/bin/magerun
+  sudo chmod +x /usr/bin/magerun
 fi
-sudo cp ./n98-magerun.phar /usr/bin/magerun
-sudo chmod +x /usr/bin/magerun
 
 # Install Modman
 # ---------------------------------------------------------------------- */
-cd /vagrant
-bash < <(wget -q --no-check-certificate -O - https://raw.github.com/colinmollenhour/modman/master/modman-installer)
-sudo mv /home/vagrant/bin/modman /usr/bin/modman
-sudo chmod +x /usr/bin/modman
+if [[ $MODMAN == "true" ]]; then
+  cd /vagrant
+  bash < <(wget -q --no-check-certificate -O - https://raw.github.com/colinmollenhour/modman/master/modman-installer)
+  sudo mv /home/vagrant/bin/modman /usr/bin/
+  sudo chmod +x /usr/bin/modman
+fi
