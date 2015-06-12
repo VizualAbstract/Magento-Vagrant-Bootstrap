@@ -19,7 +19,6 @@ MAGERUN=${10}
 MODMAN=${11}
 GIT=${12}
 COMPASS=${13}
-RVM_VERSION${14}
 
 
 # Run update
@@ -168,14 +167,11 @@ if [[ $MODMAN == "true" ]]; then
 fi
 
 
-# Install Compass (RVM + SASS)
+# Install Compass (Ruby)
 # ---------------------------------------------------------------------- */
 if [[ $COMPASS == "true" ]]; then
   cd /vagrant
-  sudo curl -L http://get.rvm.io | bash -s
-  source /home/vagrant/.rvm/scripts/rvm
-  rvm use --install ${RVM_VERSION}
-  gem update --system
+  apt-get -y install ruby-dev
   gem install compass
 fi
 
@@ -192,8 +188,9 @@ if [[ $GIT == "true" ]]; then
   fi
 fi
 
+
 # Print Completion Message
 # ---------------------------------------------------------------------- */
 echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
-echo "++++++++ URL: ${MAGENTO_URL} ++++++++"
+echo "++++**++++ URL: ${MAGENTO_URL} ++++++**++"
 echo "+++++++++++++++++++++++++++++++++++++++++++++++++"

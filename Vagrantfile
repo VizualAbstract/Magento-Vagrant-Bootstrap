@@ -16,7 +16,6 @@ use_magerun = "true"
 use_modman = "true"
 use_git = "true"
 use_compass = "true"
-rvm_version = "1.9.3"
 
 # Run Vagrant Configuration
 # ---------------------------------------------------------------------- */
@@ -36,8 +35,7 @@ Vagrant.configure(2) do |config|
     use_magerun,
     use_modman,
     use_git,
-    use_compass,
-    rvm_version
+    use_compass
   ]
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
