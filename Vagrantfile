@@ -21,7 +21,7 @@ rvm_version = "1.9.3"
 # Run Vagrant Configuration
 # ---------------------------------------------------------------------- */
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/trusty64" # https://vagrantcloud.com/ubuntu/boxes/trusty64/versions/20150609.0.1/providers/virtualbox.box
 
   config.vm.provision :shell, :path => "vm_provisions/bootstrap.sh", :args =>[
     magento_version,
