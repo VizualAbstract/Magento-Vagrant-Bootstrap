@@ -2,7 +2,7 @@
 # ---------------------------------------------------------------------- */
 magento_version = "1.9.1.0"
 magento_sampleVersion = "1.9.0.0"
-magento_sampleData = "false"
+magento_sampleData = "true"
 
 magento_adminUser = "admin"
 magento_adminPassword = "password123"
@@ -21,7 +21,7 @@ rvm_version = "1.9.3"
 # Run Vagrant Configuration
 # ---------------------------------------------------------------------- */
 Vagrant.configure(2) do |config|
-  config.vm.box = "trusty64"
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.provision :shell, :path => "vm_provisions/bootstrap.sh", :args =>[
     magento_version,

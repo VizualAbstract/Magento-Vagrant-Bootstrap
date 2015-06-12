@@ -168,9 +168,9 @@ if [[ $MODMAN == "true" ]]; then
 fi
 
 
-# Install RVM (SASS/Compass)
+# Install Compass (RVM + SASS)
 # ---------------------------------------------------------------------- */
-if [[ $SASS == "true" ]]; then
+if [[ $COMPASS == "true" ]]; then
   cd /vagrant
   sudo curl -L http://get.rvm.io | bash -s
   source /home/vagrant/.rvm/scripts/rvm
@@ -191,3 +191,9 @@ if [[ $GIT == "true" ]]; then
     mv Magento.gitignore .gitignore
   fi
 fi
+
+# Print Completion Message
+# ---------------------------------------------------------------------- */
+echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
+echo "++++++++ URL: ${MAGENTO_URL} ++++++++"
+echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
