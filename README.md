@@ -35,8 +35,7 @@ Before running `vagrant up`, it's recommended that you go over the pre-configura
 | magento_dbPass | magento |
 | magento_dbName | magento |
 | magento_url | http://127.0.0.1:8080 |
+| use_git | true |
 | use_magerun | true |
 | use_modman | true |
-| use_git | true |
 | use_compass | true |
-| rvm_version | 1.9.3 |
