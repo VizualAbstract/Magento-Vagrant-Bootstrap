@@ -13,6 +13,7 @@ Get up and running with Magento using Vagrant & VirtualBox. Based on [simple-mag
 
 ## Features
 
+* Ubuntu (Trusty64)
 * PHP5
 * MySQL
 * Git
