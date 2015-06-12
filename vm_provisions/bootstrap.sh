@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # Pre-Configuration Variables
 # ---------------------------------------------------------------------- */
 MAGE_VERSION=$1
@@ -16,29 +17,32 @@ MAGENTO_URL=$9
 
 MAGERUN=${10}
 MODMAN=${11}
+GIT=${12}
+COMPASS=${13}
+RVM_VERSION${14}
+
 
 # Run update
 # ---------------------------------------------------------------------- */
 apt-get update
+
 
 # Install Apache & PHP
 # ---------------------------------------------------------------------- */
 apt-get install -y apache2
 apt-get install -y php5
 apt-get install -y libapache2-mod-php5
-apt-get install -y php5-mysqlnd php5-curl php5-xdebug php5-gd php5-intl php-pear php5-imap php5-mcrypt php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php-soap
+apt-get install -y php5-mysqlnd php5-curl php5-xdebug php5-gd php5-intl php-pear php5-imap php5-mcrypt php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php-soap memcached
 # mycrypt sometimes doesn't add itself to php's module list. The following line ensures that it does
 php5enmod mcrypt
 
-# Install Additional Tools
-# ---------------------------------------------------------------------- */
-apt-get install git memcached
 
 # Delete default apache web dir and symlink mounted vagrant dir from host machine
 # ---------------------------------------------------------------------- */
 rm -rf /var/www/html
 mkdir /vagrant/httpdocs
 ln -fs /vagrant/httpdocs /var/www/html
+
 
 # Replace contents of default Apache vhost
 # ---------------------------------------------------------------------- */
@@ -66,6 +70,7 @@ echo "$VHOST" > /etc/apache2/sites-enabled/000-default.conf
 a2enmod rewrite
 service apache2 restart
 
+
 # Setup MySQL Database for Magento
 # ---------------------------------------------------------------------- */
 # Ignore the post install questions
@@ -75,6 +80,7 @@ apt-get -q -y install mysql-server-5.5
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}"
 mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}'"
 mysql -u root -e "FLUSH PRIVILEGES"
+
 
 # Download Magento
 # ---------------------------------------------------------------------- */
@@ -95,6 +101,7 @@ if [[ ! -f "/vagrant/httpdocs/index.php" ]]; then
   rm -rf magento*
 fi
 
+
 # Download and Install Sample Data
 # ---------------------------------------------------------------------- */
 if [[ $SAMPLE_DATA == "true" ]]; then
@@ -109,6 +116,7 @@ if [[ $SAMPLE_DATA == "true" ]]; then
   mysql -u root ${DB_NAME} < magento-sample-data-${DATA_VERSION}/magento_sample_data_for_${DATA_VERSION}.sql
   rm -rf magento-sample-data-${DATA_VERSION}
 fi
+
 
 # Run the Magento Installer
 # ---------------------------------------------------------------------- */
@@ -137,6 +145,7 @@ if [ ! -f "/vagrant/httpdocs/app/etc/local.xml" ]; then
   /usr/bin/php -f shell/indexer.php reindexall
 fi
 
+
 # Install n98-magerun
 # ---------------------------------------------------------------------- */
 if [[ $MAGERUN == "true" ]]; then
@@ -148,11 +157,37 @@ if [[ $MAGERUN == "true" ]]; then
   sudo chmod +x /usr/bin/magerun
 fi
 
+
 # Install Modman
 # ---------------------------------------------------------------------- */
 if [[ $MODMAN == "true" ]]; then
   cd /vagrant
-  bash < <(wget -q --no-check-certificate -O - https://raw.github.com/colinmollenhour/modman/master/modman-installer)
-  sudo mv /home/vagrant/bin/modman /usr/bin/
+  sudo bash < <(wget -q --no-check-certificate -O - https://raw.github.com/colinmollenhour/modman/master/modman-installer)
+  sudo mv /root/bin/modman /usr/bin/
   sudo chmod +x /usr/bin/modman
+fi
+
+
+# Install RVM (SASS/Compass)
+# ---------------------------------------------------------------------- */
+if [[ $SASS == "true" ]]; then
+  cd /vagrant
+  sudo curl -L http://get.rvm.io | bash -s
+  source /home/vagrant/.rvm/scripts/rvm
+  rvm use --install ${RVM_VERSION}
+  gem update --system
+  gem install compass
+fi
+
+
+# Install Git and a standard magento .gitignore file
+# ---------------------------------------------------------------------- */
+if [[ $GIT == "true" ]]; then
+  apt-get install -y libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+  apt-get install -y git
+  cd /var/www/html/
+  if [[ ! -f "/var/www/html/.gitignore" ]]; then
+    wget https://raw.githubusercontent.com/github/gitignore/master/Magento.gitignore -O Magento.gitignore
+    mv Magento.gitignore .gitignore
+  fi
 fi
