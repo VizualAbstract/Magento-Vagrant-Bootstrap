@@ -15,9 +15,9 @@ DB_PASS=$7
 DB_NAME=$8
 MAGENTO_URL=$9
 
-MAGERUN=${10}
-MODMAN=${11}
-GIT=${12}
+GIT=${10}
+MAGERUN=${11}
+MODMAN=${12}
 COMPASS=${13}
 
 
@@ -145,6 +145,19 @@ if [ ! -f "/vagrant/httpdocs/app/etc/local.xml" ]; then
 fi
 
 
+# Install Git and a standard magento .gitignore file
+# ---------------------------------------------------------------------- */
+if [[ $GIT == "true" ]]; then
+  apt-get install -y libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+  apt-get install -y git
+  cd /var/www/html/
+  if [[ ! -f "/var/www/html/.gitignore" ]]; then
+    wget https://raw.githubusercontent.com/github/gitignore/master/Magento.gitignore -O Magento.gitignore
+    mv Magento.gitignore .gitignore
+  fi
+fi
+
+
 # Install n98-magerun
 # ---------------------------------------------------------------------- */
 if [[ $MAGERUN == "true" ]]; then
@@ -176,21 +189,8 @@ if [[ $COMPASS == "true" ]]; then
 fi
 
 
-# Install Git and a standard magento .gitignore file
-# ---------------------------------------------------------------------- */
-if [[ $GIT == "true" ]]; then
-  apt-get install -y libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
-  apt-get install -y git
-  cd /var/www/html/
-  if [[ ! -f "/var/www/html/.gitignore" ]]; then
-    wget https://raw.githubusercontent.com/github/gitignore/master/Magento.gitignore -O Magento.gitignore
-    mv Magento.gitignore .gitignore
-  fi
-fi
-
-
 # Print Completion Message
 # ---------------------------------------------------------------------- */
 echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
-echo "++++**++++ URL: ${MAGENTO_URL} ++++++**++"
+echo "++++++++++ URL: ${MAGENTO_URL} ++++++++++"
 echo "+++++++++++++++++++++++++++++++++++++++++++++++++"

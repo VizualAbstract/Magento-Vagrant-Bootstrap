@@ -12,9 +12,9 @@ magento_dbPass = "magento"
 magento_dbName = "magento"
 magento_url = "http://127.0.0.1:8080/"
 
+use_git = "true"
 use_magerun = "true"
 use_modman = "true"
-use_git = "true"
 use_compass = "true"
 
 # Run Vagrant Configuration
@@ -32,9 +32,9 @@ Vagrant.configure(2) do |config|
     magento_dbPass,
     magento_dbName,
     magento_url,
+    use_git,
     use_magerun,
     use_modman,
-    use_git,
     use_compass
   ]
 
